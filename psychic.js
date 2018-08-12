@@ -1,84 +1,57 @@
-var alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-
 var wins = 0;
 var losses = 0;
-var guesses = 9;
+var guessesLeft = 9;
 var chosenLetter = null;
-var guessedKeys = [];
+var guessesSoFar = [];
 
+//array of letters to choose from
+var computerChoices = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 
-var chooseLetter = function () {
-    chosenLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-}
-
-var updateGuessesLeft = function () {
-    document.getElementById("guessesLeft").innerHTML = guesses;
-}
-
-var updateGuessesSoFar = function () {
-    document.getElementById("guessesSoFar").innerHTML = guessedKeys.join(", ");
-}
-
+//reset game function
 var reset = function () {
-    guesses = 9;
-    guessedKeys = [];
-    chooseLetter();
-    updateGuessesLeft();
-    updateGuessesSoFar();
-  
-    // document.getElementById("#guessedKey").innerHTML = 'Your Guesses:';
-    // chooseLetter();
+    guessesLeft = 9;
+    guessesSoFar.length =[];
 };
 
-updateGuessesLeft();
-updateGuessesSoFar();
+//identifies what key is being pressed by user, converts to lower case
+document.onkeyup = function (event) {
+    var userGuess = String.fromCharCode(event.keyCode) .toLowerCase();
 
-chooseLetter();
-console.log(chosenLetter);
+//random choice by computer
+var chosenLetter = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
+//pusshes guessed letter to array
+guessesSoFar.push(userGuess);
 
-document.onkeydown = function (event) {
-    var guessedKey = String.fromCharCode(event.which).toLowerCase();
-
-    guessedKeys.push(guessedKey)
-    updateGuessesLeft();
-    updateGuessesSoFar();
-
-// var chosenLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-
-console.log(chosenLetter);
-
-if (guessedKey === chosenLetter) {
-    alert("You Won!");
-    wins++;
-    document.getElementById("wins").innerHTML = wins;
-    reset();
     
+//if guess is correct, increase wins by one, reset game
+if (userGuess === chosenLetter) {
+    wins++;
+    alert("You Won!");
+    reset();
 }
-
-else if (guesses === 0) {
-    alert ("You lost. Would you like to try again?");
+//if guess guesses reach nine, increases losses by one, reset game 
+else if (guessesLeft < 2) {
     losses++;
-    document.getElementById("losses").innerHTML = losses;
+    alert ("You lost. Would you like to try again?");
     reset();
 }
 
 else  {
-    guesses--;
+    guessesLeft--;
 }
+
+
+//displays results in HTML
+
+var html = 
+    "<p>Total Wins: " + wins + "</p>" +
+    "<p>Losses: " + losses + "</p>" +
+    "<p>Guesses Remaining: " + guessesLeft + "</p>"+
+    "<p>Guesses So Far: " + guessesSoFar + "</p>";
+    document.querySelector("#game").innerHTML = html;
 }
 
-
-
-// var html = 
-//         "<p>Wins: " + wins + "</p>" +
-//         "<p>Losses: " + losses + "</p>" +
-//         "<p>Guesses Remaining: " + guesses + "</p>";
-//         // "<p>Guesses So Far: " + chosenLetter + "</p>";
-//         document.querySelector("#game").innerHTML = html;
-//         guessedKey = " " + guessedKey;
-//         document.querySelector("#guessedKey").innerHTML += guessedKey;
-//         }
 
 
 
